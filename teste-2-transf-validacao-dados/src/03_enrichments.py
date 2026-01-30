@@ -96,24 +96,23 @@ print(f"Base enriquecida: {df_enriquecido.shape}")
 
 
 
-# Análise de falhas de match
+# Análise de falhas de match com o CADOP
 
+if "REGISTRO_ANS" in df_enriquecido.columns:
+    sem_match = df_enriquecido["REGISTRO_ANS"].isna().sum()
+    print(f"⚠ Registros sem correspondência no CADOP: {sem_match}")
 
-sem_match = df_enriquecido["REGISTRO_ANS"].isna().sum()
+    # Gera base apenas com falhas de match
+    df_falhas_match = df_enriquecido[df_enriquecido["REGISTRO_ANS"].isna()]
 
-print(f"Registros sem correspondência no CADOP: {sem_match}")
+    output_falhas = "data/processed/despesas_sem_match_cadop.csv"
+    df_falhas_match.to_csv(
+        output_falhas,
+        sep=";",
+        index=False,
+        encoding="utf-8"
+    )
 
-
-
-# Salva o resultado
-
-output_path = "data/processed/despesas_operadoras_enriquecido.csv"
-
-df_enriquecido.to_csv(
-    output_path,
-    sep=";",
-    index=False,
-    encoding="utf-8"
-)
-
-print(f"Arquivo salvo em: {output_path}")
+    print(f" Arquivo de falhas salvo em: {output_falhas}")
+else:
+    print("Coluna REGISTRO_ANS não encontrada após o merge.")

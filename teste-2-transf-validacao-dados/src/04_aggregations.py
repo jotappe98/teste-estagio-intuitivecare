@@ -44,7 +44,7 @@ df_agregado = (
     .reset_index()
 )
 
-# Ordenação
+# Em ordem
 df_agregado = df_agregado.sort_values(
     by="TOTAL_DESPESAS",
     ascending=False

@@ -94,6 +94,22 @@ df_enriquecido = df_despesas.merge(
 
 print(f"Base enriquecida: {df_enriquecido.shape}")
 
+# Resolver conflito de UF
+df_enriquecido["UF"] = df_enriquecido["UF_y"]
+
+df_enriquecido = df_enriquecido.drop(columns=["UF_x", "UF_y"])
+
+# Salvar base enriquecida
+output_enriquecido = "data/processed/despesas_operadoras_enriquecido.csv"
+
+df_enriquecido.to_csv(
+    output_enriquecido,
+    sep=";",
+    index=False,
+    encoding="utf-8"
+)
+
+print(f"Arquivo enriquecido salvo em: {output_enriquecido}")
 
 
 # Análise de falhas de match com o CADOP

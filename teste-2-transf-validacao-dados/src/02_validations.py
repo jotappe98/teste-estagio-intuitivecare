@@ -125,4 +125,3 @@ df.to_csv(
 )
 
 print(f" Arquivo salvo em: {output_path}")
-print(" Etapa 2.1 concluída com sucesso.")

@@ -4,64 +4,50 @@ Processo Seletivo – IntuitiveCare (Estágio)
 
 Objetivo
 
-Este projeto tem como objetivo construir um pipeline simples de processamento de dados, contemplando as etapas de:
+Este projeto tem como objetivo realizar a transformação e validação dos dados consolidados no Teste 1, aplicando um pipeline simples e organizado que contempla:
 
-Construção de base consolidada
+Construção de uma base inicial para análise
 
-Validação dos dados
+Validação de consistência dos dados
 
-Enriquecimento com cadastro da ANS (CADOP)
+Enriquecimento com dados cadastrais da ANS (CADOP)
 
-Agregação e geração de métricas
+Agregação e geração de métricas analíticas
 
-O foco é demonstrar organização de código, tratamento de dados e geração de saídas consistentes.
-
-
-teste-2-transf-validacao-dados/
-│
-├── data/
-│   ├── raw/         # Dados brutos 
-│   └── processed/   # Bases tratadas e resultados
-│
-├── src/
-│   ├── 01_build_base_dataset.py
-│   ├── 02_validations.py
-│   ├── 03_enrichments.py
-│   └── 04_aggregations.py
-│
-├── README.md
-└── requirements.txt
+O foco está em demonstrar organização de código, tratamento de dados e tomada de decisões técnicas adequadas ao contexto do problema.
 
 Descrição dos Scripts
-01_build_base_dataset.py :
+01_build_base_dataset.py
 
-Responsável por carregar os arquivos de despesas e gerar a base inicial consolidada para processamento.
+Responsável por carregar os dados consolidados de despesas (gerados no Teste 1) e o cadastro de operadoras da ANS (CADOP), criando uma base intermediária para processamento posterior.
 
-02_validations.py :
+Essa etapa tem como objetivo preparar os dados para as validações e enriquecimentos seguintes, mantendo o pipeline organizado em fases bem definidas.
 
-Realiza validações básicas nos dados, como:
+02_validations.py
 
-Padronização de colunas
+Realiza validações básicas para garantir a consistência dos dados, incluindo:
 
-Tratamento de valores nulos
+Padronização dos nomes das colunas
 
-Limpeza de CNPJ
+Remoção de registros com Razão Social vazia
 
-Garantia de consistência dos registros
+Conversão e validação de valores monetários positivos
 
-Gera uma base validada em data/processed.
+Validação de CNPJ (formato e dígitos verificadores)
 
-03_enrichments.py :
+Os registros que não atendem aos critérios definidos são removidos, e o resultado é salvo como uma base validada em data/processed.
 
-Realiza o enriquecimento da base de despesas com os dados do cadastro de operadoras da ANS (CADOP), utilizando o CNPJ como chave de junção.
+03_enrichments.py
 
-Também é gerado um arquivo separado contendo os registros que não tiveram correspondência no CADOP.
+Executa o enriquecimento da base validada de despesas com os dados cadastrais das operadoras da ANS (CADOP), utilizando o CNPJ como chave de junção.
 
-04_aggregations.py :
+Também é gerado um arquivo separado contendo os registros que não tiveram correspondência no cadastro, permitindo análise posterior de possíveis inconsistências ou lacunas nos dados.
 
-Agrupa os dados por operadora (Razão Social) e UF, calculando:
+04_aggregations.py
 
-Total de despesas por operadora e UF
+Realiza a agregação dos dados por operadora (Razão Social) e UF, calculando:
+
+Total de despesas
 
 Média de despesas
 
@@ -73,26 +59,36 @@ data/processed/despesas_agregadas.csv
 Como Executar o Projeto
 
 Instale as dependências:
-
 pip install -r requirements.txt
 
-Execute os scripts na ordem:
+Execute os scripts na ordem abaixo:
 
 python src/01_build_base_dataset.py
 python src/02_validations.py
 python src/03_enrichments.py
 python src/04_aggregations.py
 
+Trade-offs Técnicos
+Validação de CNPJ
 
-Trade-off Técnico (Ordenação)
-A ordenação dos dados foi realizada diretamente com o Pandas após a agregação, utilizando sort_values.
+Durante o processamento, foram identificados CNPJs inválidos.
+As alternativas consideradas incluíam manter os registros marcados como inválidos ou separá-los em uma base auxiliar.
 
-Essa abordagem foi escolhida por ser simples, legível e suficiente para o volume de dados utilizado neste teste. Em um cenário com volumes muito maiores, poderia ser avaliada a utilização de bancos de dados ou processamento distribuído para melhorar performance e consumo de memória.
+Optou-se por remover os registros inválidos do pipeline principal para garantir consistência nas etapas de enriquecimento e agregação, simplificando o fluxo de processamento.
+
+Estratégia de Join com o CADOP
+
+Foi utilizado um LEFT JOIN entre a base de despesas e o cadastro de operadoras, garantindo que registros de despesas sem correspondência no CADOP não fossem descartados silenciosamente. Esses casos são registrados em um arquivo separado para análise.
+
+Ordenação dos Dados
+
+A ordenação dos dados agregados foi realizada utilizando sort_values do Pandas, após a etapa de agregação.
+
+Essa abordagem foi escolhida por ser simples, legível e adequada ao volume de dados utilizado neste teste. Em cenários com volumes significativamente maiores, outras soluções poderiam ser avaliadas, como o uso de bancos de dados ou processamento distribuído.
 
 Observações Finais
 
-O pipeline foi estruturado de forma sequencial para facilitar entendimento e manutenção.
+O pipeline foi estruturado de forma sequencial para facilitar o entendimento e a manutenção do código.
+As decisões técnicas priorizaram simplicidade, clareza e aderência ao escopo do teste, evitando complexidade desnecessária.
 
-O projeto prioriza clareza e organização do código.
-
-Todas as saídas são salvas na pasta data/processed para facilitar a verificação dos resultados.
+Todas as saídas geradas são salvas na pasta data/processed, facilitando a verificação dos resultados.

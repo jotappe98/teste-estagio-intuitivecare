@@ -1,0 +1,30 @@
+# Informações do Banco de Dados – Teste 3
+
+Este documento descreve de forma resumida as decisões tomadas para a modelagem do banco de dados utilizado no Teste 3 do processo seletivo da IntuitiveCare.
+
+## Estrutura Geral
+
+Foi criada uma tabela principal chamada `despesas_operadoras`, que concentra os dados necessários para as análises solicitadas no teste.
+
+A tabela utiliza dados já tratados e agregados nos testes anteriores, principalmente a partir do arquivo `despesas_agregadas.csv`.
+
+## Modelagem Adotada
+
+Foi escolhida uma abordagem **desnormalizada**, concentrando todas as informações relevantes em uma única tabela.
+
+Essa decisão foi tomada considerando que:
+
+- O volume de dados é relativamente pequeno
+- Os dados não sofrem atualizações frequentes
+- As consultas analíticas ficam mais simples
+- Reduz a necessidade de múltiplos JOINs
+
+## Tipos de Dados
+
+- Valores monetários foram armazenados utilizando o tipo `DECIMAL`, garantindo maior precisão para cálculos financeiros.
+- Campos textuais, como Razão Social e UF, utilizam `VARCHAR`.
+- O campo `id` foi definido como chave primária auto incremental.
+
+## Considerações Finais
+As principais validações e tratamentos de dados foram realizadas nos testes anteriores, especialmente no Teste 2.  
+Dessa forma, o banco de dados assume que os dados carregados já estão consistentes e prontos para análise.

@@ -96,5 +96,25 @@ def despesas_por_operadora(cnpj):
     })
 
 
+# Rota de estatísticas agregadas
+@app.route("/api/estatisticas", methods=["GET"])
+def estatisticas():
+    total_despesas = float(df_agregado["TOTAL_DESPESAS"].sum())
+    media_despesas = float(df_agregado["TOTAL_DESPESAS"].mean())
+
+    top_5_operadoras = (
+        df_agregado
+        .sort_values(by="TOTAL_DESPESAS", ascending=False)
+        .head(5)[["RAZAO_SOCIAL", "UF", "TOTAL_DESPESAS"]]
+        .to_dict(orient="records")
+    )
+
+    return jsonify({
+        "total_despesas": total_despesas,
+        "media_despesas": media_despesas,
+        "top_5_operadoras": top_5_operadoras
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)

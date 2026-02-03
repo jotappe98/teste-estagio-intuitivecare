@@ -1,13 +1,19 @@
 <template>
   <div class="app">
     <h1>Teste 4 — Interface Web</h1>
-    <p>Vue está rodando corretamente 🚀</p>
+
+    <Operadoras />
   </div>
 </template>
 
 <script>
+import Operadoras from './views/Operadoras.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Operadoras
+  }
 }
 </script>
 

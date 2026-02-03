@@ -1,20 +1,22 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import pandas as pd
 
 app = Flask(__name__)
+CORS(app)
 
 # Base principal (detalhada)
 df_operadoras = pd.read_csv(
-    "backend/data/despesas_operadoras_enriquecido.csv",
+    "data/despesas_operadoras_enriquecido.csv",
     sep=";",
     encoding="utf-8"
 )
 
-df_operadoras["CNPJ"] = df_operadoras["CNPJ"].astype(str)  #Transforma o dado recebido do csv em str
+df_operadoras["CNPJ"] = df_operadoras["CNPJ"].astype(str)
 
 # Base agregada (estatísticas)
 df_agregado = pd.read_csv(
-    "backend/data/despesas_agregadas.csv",
+    "data/despesas_agregadas.csv",
     sep=";",
     encoding="utf-8"
 )

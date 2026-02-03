@@ -10,12 +10,15 @@ df_operadoras = pd.read_csv(
     encoding="utf-8"
 )
 
+df_operadoras["CNPJ"] = df_operadoras["CNPJ"].astype(str)  #Transforma o dado recebido do csv em str
+
 # Base agregada (estatísticas)
 df_agregado = pd.read_csv(
     "backend/data/despesas_agregadas.csv",
     sep=";",
     encoding="utf-8"
 )
+
 
 # Rota para listar as operadoras
 @app.route("/api/operadoras", methods=["GET"])
@@ -39,15 +42,23 @@ def listar_operadoras():
     })
 
 
-# Rota para obter detalhes de uma operadora específica
+# Rota para encontrar operadora por CNPJ
 @app.route("/api/operadoras/<cnpj>", methods=["GET"])
-def detalhe_operadora(cnpj):
-    operadora = df[df["CNPJ"] == cnpj]
+def get_operadora_por_cnpj(cnpj):
+    print("CNPJ recebido na rota:", cnpj, type(cnpj))
+    print(
+        "CNPJ no dataframe:",
+        df_operadoras["CNPJ"].iloc[0],
+        type(df_operadoras["CNPJ"].iloc[0])
+    )
+
+    operadora = df_operadoras[df_operadoras["CNPJ"] == cnpj]
 
     if operadora.empty:
         return jsonify({"erro": "Operadora não encontrada"}), 404
 
-    return jsonify(operadora.to_dict(orient="records")[0])
+    return jsonify(operadora.to_dict(orient="records"))
+
 
 
 if __name__ == "__main__":

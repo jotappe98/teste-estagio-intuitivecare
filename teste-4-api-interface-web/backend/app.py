@@ -9,16 +9,28 @@ CORS(app)
 df_operadoras = pd.read_csv(
     "data/despesas_operadoras_enriquecido.csv",
     sep=";",
-    encoding="utf-8"
+    encoding="utf-8-sig"
 )
-
 df_operadoras["CNPJ"] = df_operadoras["CNPJ"].astype(str)
+
+#Correção de enconding
+def fix_text(s):
+    if isinstance(s, str):
+        try:
+            return s.encode("latin1").decode("utf-8")
+        except:
+            return s
+    return s
+
+df_operadoras["RAZAO_SOCIAL"] = df_operadoras["RAZAO_SOCIAL"].apply(fix_text)
+df_operadoras["MODALIDADE_x"] = df_operadoras["MODALIDADE_x"].apply(fix_text)
+df_operadoras["UF"] = df_operadoras["UF"].apply(fix_text)
 
 # Base agregada (estatísticas)
 df_agregado = pd.read_csv(
     "data/despesas_agregadas.csv",
     sep=";",
-    encoding="utf-8"
+    encoding="utf-8-sig"
 )
 
 

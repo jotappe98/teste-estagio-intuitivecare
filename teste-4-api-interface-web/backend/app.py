@@ -60,6 +60,41 @@ def get_operadora_por_cnpj(cnpj):
     return jsonify(operadora.to_dict(orient="records"))
 
 
+# Rota para encontrar despesas por operadora
+@app.route("/api/operadoras/<cnpj>/despesas", methods=["GET"])
+def despesas_por_operadora(cnpj):
+    # garante comparação correta (string)
+    df_operadoras["CNPJ"] = df_operadoras["CNPJ"].astype(str)
+
+    dados = df_operadoras[df_operadoras["CNPJ"] == cnpj]
+
+    if dados.empty:
+        return jsonify({"erro": "Despesas não encontradas para este CNPJ"}), 404
+
+    # organiza por trimestre
+    resultado = []
+
+    for trimestre, grupo in dados.groupby("TRIMESTRE"):
+        despesas = []
+
+        for _, row in grupo.iterrows():
+            despesas.append({
+                "tipo_conta": row["TIPO_CONTA"],
+                "valor": row["VALOR_TOTAL_VL_SALDO_FINAL"]
+            })
+
+        resultado.append({
+            "trimestre": trimestre,
+            "despesas": despesas
+        })
+
+    return jsonify({
+        "cnpj": cnpj,
+        "razao_social": dados.iloc[0]["RAZAO_SOCIAL"],
+        "uf": dados.iloc[0]["UF"],
+        "historico": resultado
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)

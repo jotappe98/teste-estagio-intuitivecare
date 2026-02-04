@@ -2,8 +2,6 @@
 
 # README Geral do Repositório (Processo Seletivo)
 
-
-```md
 # Teste de Processo Seletivo — IntuitiveCare
 
 Este repositório contém os testes desenvolvidos como parte de um processo seletivo para vaga de um estágio.
